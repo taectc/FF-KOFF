@@ -1,0 +1,74 @@
+// DOM INPUT
+const priceInput = document.getElementById("product-price");
+const quantityInput = document.getElementById("product-quantity");
+const shippingInput = document.getElementById("product-shipping");
+
+// DOM RESULT
+const errorBox = document.getElementById("error");
+const resultBox = document.getElementById("result");
+
+// DOM ERROR HANDLE
+const totalBtn = document.getElementById("total-btn");
+
+// UTIL FN 1
+// ["500","2","100"] => [500,2,100]
+const parseInput = (...input) => {
+  return input.map((str) => Number(str));
+};
+
+// UTIL FN 2
+const validateInput = (...input) => {
+  return input.every((el) => typeof el === "number" && !isNaN(el));
+};
+
+// HideError
+const hideError = () => {
+  errorBox.classList.add("invisible");
+};
+hideError();
+
+const showError = () => {
+  errorBox.classList.remove("invisible");
+};
+
+// Custom Meassage
+const showErrorMessage = (inputs, numbers) => {
+    const fullErrorMsg = inputs.reduce((msg, str, index) => {
+      if (validateInput(numbers[index])) {
+        msg += '';
+      } else {
+        msg += `${str} is not a number. `;
+      }
+      return msg;
+    }, "");
+    // console.log(fullErrorMsg);
+    errorBox.innerText = fullErrorMsg
+    showError()
+  };
+  
+
+// CalTotal
+const calTotal = () => {
+  hideError();
+  resultBox.innerText = ''
+  // Parse Input
+  const inputs = [priceInput.value, quantityInput.value, shippingInput.value];
+  const numbers = parseInput(...inputs);
+  console.log(numbers);
+  // Validate input
+  const valid = validateInput(...numbers);
+  console.log(valid);
+  // pass : calTotal
+  // fail : show Error
+  if (valid) {
+    const [price, quantity, shipping] = numbers;
+    const totalPrice = price * quantity + shipping;
+    console.log(totalPrice);
+    resultBox.innerText = totalPrice;
+  } else {
+    // showError();
+    showErrorMessage(inputs, numbers);
+  }
+};
+
+totalBtn.addEventListener("click", calTotal);
